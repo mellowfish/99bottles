@@ -1,16 +1,6 @@
 class Bottles
   def verse(count)
-    if count == 0
-      <<~VERSE
-        No more bottles of beer on the wall, no more bottles of beer.
-        Go to the store and buy some more, 99 bottles of beer on the wall.
-      VERSE
-    else
-      <<~VERSE
-        #{count_bottles(count)} of beer on the wall, #{count_bottles(count)} of beer.
-        Take #{unit_word(count)} down and pass it around, #{count_bottles(count - 1)} of beer on the wall.
-      VERSE
-    end
+    Verse.for(count).to_s
   end
 
   def verses(from, to)
@@ -22,23 +12,45 @@ class Bottles
     verses(99, 0)
   end
 
-private
-
-  def unit_word(n)
-    case n
-    when 1 then "it"
-    else "one"
+  class Verse
+    def self.for(count)
+      if count.zero?
+        <<~VERSE
+          No more bottles of beer on the wall, no more bottles of beer.
+          Go to the store and buy some more, 99 bottles of beer on the wall.
+        VERSE
+      else
+        new(count)
+      end
     end
-  end
 
-  def count_bottles(n)
-    case n
-    when 0
-      "no more bottles"
-    when 1
-      "1 bottle"
-    else
-      "#{n} bottles"
+    attr_reader :count
+    def initialize(count)
+      @count = count
+    end
+
+    def to_s
+      <<~VERSE
+        #{count_bottles(count)} of beer on the wall, #{count_bottles(count)} of beer.
+        Take #{unit_word(count)} down and pass it around, #{count_bottles(count - 1)} of beer on the wall.
+      VERSE
+    end
+
+  private
+
+    def unit_word(n)
+      case n
+      when 1 then "it"
+      else "one"
+      end
+    end
+
+    def count_bottles(n)
+      case n
+      when 0 then "no more bottles"
+      when 1 then "1 bottle"
+      else "#{n} bottles"
+      end
     end
   end
 end
