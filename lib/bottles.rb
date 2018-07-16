@@ -31,25 +31,38 @@ class Bottles
 
     def to_s
       <<~VERSE
-        #{count_bottles(count)} of beer on the wall, #{count_bottles(count)} of beer.
-        Take #{unit_word(count)} down and pass it around, #{count_bottles(count - 1)} of beer on the wall.
+        #{collection.count_bottles} of beer on the wall, #{collection.count_bottles} of beer.
+        Take #{collection.unit_word} down and pass it around, #{next_collection.count_bottles} of beer on the wall.
       VERSE
     end
 
-  private
+    def collection
+      Collection.new(count)
+    end
 
-    def unit_word(n)
-      case n
+    def next_collection
+      Collection.new(count - 1)
+    end
+  end
+
+  class Collection
+    attr_reader :count
+    def initialize(count)
+      @count = count
+    end
+
+    def unit_word
+      case count
       when 1 then "it"
       else "one"
       end
     end
 
-    def count_bottles(n)
-      case n
+    def count_bottles
+      case count
       when 0 then "no more bottles"
       when 1 then "1 bottle"
-      else "#{n} bottles"
+      else "#{count} bottles"
       end
     end
   end
